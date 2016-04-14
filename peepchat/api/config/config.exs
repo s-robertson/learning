@@ -19,6 +19,22 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
+config :phoenix, :format_encoders,
+  "json-api": Poison
+
+config :plug, :mimes, %{
+  "application/vnd.api+json" => ["json-api"]
+}
+
+config :guardian, Guardian,
+  allowed_algos: ["HS512"], # optional
+  verify_module: Guardian.JWT,  # optional
+  issuer: "Peepchat",
+  ttl: { 30, :days },
+  verify_issuer: true, # optional
+  secret_key: "ijduX9iXaUP9p6WIdW0P3S4y6D4Nq5WB61P/9lwF28ZV0deRTfCn9YJspdiWYa0h",
+  serializer: Peepchat.GuardianSerializer
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"
